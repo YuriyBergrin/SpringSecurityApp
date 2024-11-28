@@ -1,10 +1,12 @@
 package com.gmail.bergrin.SpringSecurytyApp.security;
 
 import java.util.Collection;
+import java.util.Collections;
 
 import com.gmail.bergrin.SpringSecurytyApp.models.Person;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Getter
@@ -18,7 +20,7 @@ public class PersonDetails implements UserDetails {
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return null;
+    return Collections.singletonList(new SimpleGrantedAuthority(person.getRole()));
   }
 
   @Override

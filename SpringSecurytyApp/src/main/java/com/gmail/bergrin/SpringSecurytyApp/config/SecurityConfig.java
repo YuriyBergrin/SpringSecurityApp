@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -16,6 +17,8 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalAuthentication
+//prePostEnabled=true
 public class SecurityConfig {
 
   private final PersonDetailsService personDetailsService;
@@ -41,12 +44,13 @@ public class SecurityConfig {
     // Get AuthenticationManager
     AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
 
-    http.csrf(AbstractHttpConfigurer::disable);
+//    http.csrf(AbstractHttpConfigurer::disable);
 
     http.authenticationManager(authenticationManager)
         .authorizeHttpRequests((authz) -> authz
+//            .requestMatchers("/admin").hasRole("ADMIN")
             .requestMatchers("/", "/auth/**").permitAll()
-            .anyRequest().authenticated()
+            .anyRequest().hasAnyRole("ADMIN", "USER")
         );
 
     http.formLogin((formLogin) ->
